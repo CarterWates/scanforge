@@ -52,7 +52,10 @@ def scan(
     """Scan TCP ports on authorized targets."""
 
     try:
-        parsed_targets = parse_targets(target)
+        parsed_targets = parse_targets(
+            target,
+            max_targets=None if allow_large_scan else max_targets,
+        )
         parsed_ports = parse_ports(ports)
         enforce_target_limit(parsed_targets, max_targets, allow_large_scan)
         _validate_scan_options(timeout, concurrency, output)
