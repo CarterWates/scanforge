@@ -1,0 +1,38 @@
+{
+  "summary": {
+    "closed_ports": 1,
+    "duration_seconds": 0.042,
+    "filtered_ports": 0,
+    "open_ports": 2,
+    "ports": 3,
+    "targets": 1,
+    "total_checks": 3,
+    "unknown_ports": 0
+  },
+  "results": [
+    {
+      "banner": "OpenSSH",
+      "error": null,
+      "latency_ms": 1.84,
+      "port": 22,
+      "state": "open",
+      "target": "127.0.0.1"
+    },
+    {
+      "banner": null,
+      "error": null,
+      "latency_ms": 0.92,
+      "port": 80,
+      "state": "open",
+      "target": "127.0.0.1"
+    },
+    {
+      "banner": null,
+      "error": "connection refused",
+      "latency_ms": 0.71,
+      "port": 443,
+      "state": "closed",
+      "target": "127.0.0.1"
+    }
+  ]
+}
