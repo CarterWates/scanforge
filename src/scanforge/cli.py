@@ -16,6 +16,7 @@ from scanforge.output.terminal import build_results_table, render_summary
 from scanforge.ports import parse_ports
 from scanforge.safety import AUTHORIZATION_NOTICE, DEFAULT_MAX_TARGETS, enforce_target_limit
 from scanforge.targets import parse_targets
+from scanforge.web.server import serve
 
 app = typer.Typer(
     add_completion=False,
@@ -81,6 +82,24 @@ def scan(
         typer.echo(report_to_json(report))
     else:
         typer.echo(report_to_csv(report), nl=False)
+
+
+@app.command()
+def web(
+    host: Annotated[
+        str,
+        typer.Option(help="Host interface for the local dashboard."),
+    ] = "127.0.0.1",
+    port: Annotated[int, typer.Option(help="Port for the local dashboard.")] = 8765,
+) -> None:
+    """Run the local browser dashboard."""
+
+    if host not in {"127.0.0.1", "localhost"}:
+        console.print(
+            "[yellow]Warning:[/] ScanForge is designed for local use. "
+            "Bind to non-local interfaces only on trusted networks."
+        )
+    serve(host=host, port=port)
 
 
 def _validate_scan_options(timeout: float, concurrency: int, output: str) -> None:

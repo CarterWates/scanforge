@@ -29,6 +29,16 @@ scanforge scan example.com --ports 80,443 --output json
 scanforge scan 127.0.0.1 --ports 1-1024 --output csv > scan.csv
 ```
 
+## Local dashboard
+
+Run the browser UI locally:
+
+```bash
+scanforge web
+```
+
+By default the dashboard binds to `127.0.0.1:8765` and stores completed scan history in `.scanforge/history.sqlite3`. The dashboard includes live scan progress, result filtering, JSON/CSV downloads, and a browse history view for previous reports.
+
 ## Development
 
 ```bash
@@ -40,5 +50,5 @@ python3 -m mypy src/scanforge
 ## Roadmap
 
 - Phase 1: polished terminal scanner, JSON/CSV exports, tests, and documentation
-- Phase 2: local web dashboard with scan forms, progress, filtering, and downloads
+- Phase 2: local web dashboard with scan forms, progress, filtering, downloads, and browse history
 - Later: scan profiles, HTML reports, historical comparisons, and optional privileged discovery modes

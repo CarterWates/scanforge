@@ -50,6 +50,13 @@ def test_cli_help_mentions_authorization() -> None:
     assert "explicit permission" in result.output
 
 
+def test_cli_help_lists_web_command() -> None:
+    result = runner.invoke(app, ["--help"])
+
+    assert result.exit_code == 0
+    assert "web" in result.output
+
+
 def test_cli_rejects_invalid_port() -> None:
     result = runner.invoke(app, ["scan", "127.0.0.1", "--ports", "70000"])
 

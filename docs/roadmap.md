@@ -19,6 +19,7 @@
 - Live progress updates
 - Sortable and filterable result tables
 - JSON and CSV report downloads
+- Browse history backed by local SQLite storage
 - README screenshots and demo GIF
 
 ## Later Ideas

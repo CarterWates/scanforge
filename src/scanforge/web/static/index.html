@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ScanForge</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="panel setup-panel">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <div>
+          <h1>ScanForge</h1>
+          <p>Local TCP scanner</p>
+        </div>
+      </div>
+
+      <form id="scan-form" class="scan-form">
+        <label>
+          Target
+          <input name="target" value="127.0.0.1" autocomplete="off" required>
+        </label>
+
+        <label>
+          Ports
+          <input name="ports" value="22,80,443" autocomplete="off" required>
+        </label>
+
+        <div class="form-grid">
+          <label>
+            Timeout
+            <input name="timeout" type="number" min="0.05" step="0.05" value="1">
+          </label>
+          <label>
+            Concurrency
+            <input name="concurrency" type="number" min="1" step="1" value="100">
+          </label>
+        </div>
+
+        <label>
+          Target limit
+          <input name="max_targets" type="number" min="1" step="1" value="256">
+        </label>
+
+        <div class="toggles">
+          <label class="check-row">
+            <input name="banner" type="checkbox">
+            <span>Grab banners</span>
+          </label>
+          <label class="check-row">
+            <input name="allow_large_scan" type="checkbox">
+            <span>Allow large scan</span>
+          </label>
+        </div>
+
+        <p class="notice">Only scan networks and systems you own or have explicit permission to assess.</p>
+
+        <button id="start-button" class="primary-button" type="submit">Start scan</button>
+      </form>
+    </aside>
+
+    <main class="workspace">
+      <section class="toolbar">
+        <div>
+          <p class="eyebrow">Current scan</p>
+          <h2 id="scan-title">Ready</h2>
+        </div>
+        <div class="toolbar-actions">
+          <a id="json-link" class="ghost-button disabled" href="#">JSON</a>
+          <a id="csv-link" class="ghost-button disabled" href="#">CSV</a>
+        </div>
+      </section>
+
+      <section class="status-strip">
+        <div>
+          <span class="metric-label">Progress</span>
+          <strong id="metric-progress">0 / 0</strong>
+        </div>
+        <div>
+          <span class="metric-label">Open</span>
+          <strong id="metric-open">0</strong>
+        </div>
+        <div>
+          <span class="metric-label">Duration</span>
+          <strong id="metric-duration">0.000s</strong>
+        </div>
+        <div>
+          <span class="metric-label">State</span>
+          <strong id="metric-state">Idle</strong>
+        </div>
+      </section>
+
+      <div class="progress-track" aria-hidden="true">
+        <div id="progress-bar"></div>
+      </div>
+
+      <section class="results-tools">
+        <input id="result-search" placeholder="Search results" autocomplete="off">
+        <select id="state-filter">
+          <option value="all">All states</option>
+          <option value="open">Open</option>
+          <option value="closed">Closed</option>
+          <option value="filtered">Filtered</option>
+          <option value="unknown">Unknown</option>
+        </select>
+      </section>
+
+      <section class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th data-sort="target">Target</th>
+              <th data-sort="port">Port</th>
+              <th data-sort="state">State</th>
+              <th data-sort="latency_ms">Latency</th>
+              <th>Banner</th>
+              <th>Error</th>
+            </tr>
+          </thead>
+          <tbody id="results-body">
+            <tr><td colspan="6" class="empty">No scan results yet.</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <aside class="panel history-panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Browse history</p>
+          <h2>Reports</h2>
+        </div>
+        <button id="refresh-history" class="icon-button" type="button" aria-label="Refresh history">↻</button>
+      </div>
+      <div id="history-list" class="history-list"></div>
+    </aside>
+  </div>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="/app.js"></script>
+</body>
+</html>
