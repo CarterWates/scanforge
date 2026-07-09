@@ -32,6 +32,16 @@ def test_index_serves_dashboard_shell(tmp_path) -> None:
     assert "styles.css" in response.body.decode()
 
 
+def test_responses_include_basic_browser_protection_headers(tmp_path) -> None:
+    app = LocalScanForgeApp(history_path=tmp_path / "history.sqlite3")
+
+    response = app.handle("GET", "/", None)
+
+    assert response.headers["X-Content-Type-Options"] == "nosniff"
+    assert response.headers["Referrer-Policy"] == "no-referrer"
+    assert response.headers["Content-Security-Policy"] == "default-src 'self'"
+
+
 def test_start_scan_route_returns_job_id(tmp_path) -> None:
     app = LocalScanForgeApp(history_path=tmp_path / "history.sqlite3")
 

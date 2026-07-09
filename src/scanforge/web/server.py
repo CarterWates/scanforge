@@ -13,6 +13,11 @@ from scanforge.web.history import HistoryStore, ScanOptions, default_history_pat
 from scanforge.web.jobs import ScanJobManager
 
 STATIC_DIR = Path(__file__).with_name("static")
+SECURITY_HEADERS = {
+    "Content-Security-Policy": "default-src 'self'",
+    "Referrer-Policy": "no-referrer",
+    "X-Content-Type-Options": "nosniff",
+}
 
 
 @dataclass(frozen=True, slots=True)
@@ -88,7 +93,7 @@ class LocalScanForgeApp:
         if len(pieces) == 2 and method == "POST" and pieces[1] == "rerun":
             return self._json({"job_id": self.jobs.rerun(scan_id)}, HTTPStatus.ACCEPTED)
         if len(pieces) == 2 and method == "GET" and pieces[1] == "export.json":
-            return WebResponse(
+            return self._response(
                 HTTPStatus.OK,
                 self.history.export_json(scan_id).encode(),
                 {
@@ -97,7 +102,7 @@ class LocalScanForgeApp:
                 },
             )
         if len(pieces) == 2 and method == "GET" and pieces[1] == "export.csv":
-            return WebResponse(
+            return self._response(
                 HTTPStatus.OK,
                 self.history.export_csv(scan_id).encode(),
                 {
@@ -110,12 +115,16 @@ class LocalScanForgeApp:
     def _static_response(self, filename: str, content_type: str) -> WebResponse:
         path = STATIC_DIR / filename
         if not path.exists():
-            return WebResponse(
+            return self._response(
                 HTTPStatus.OK,
                 _fallback_index().encode(),
                 {"Content-Type": content_type},
             )
-        return WebResponse(HTTPStatus.OK, path.read_bytes(), {"Content-Type": content_type})
+        return self._response(
+            HTTPStatus.OK,
+            path.read_bytes(),
+            {"Content-Type": content_type},
+        )
 
     def _read_json(self, body: bytes | None) -> dict[str, Any]:
         if not body:
@@ -133,11 +142,19 @@ class LocalScanForgeApp:
         payload: dict[str, Any],
         status: HTTPStatus = HTTPStatus.OK,
     ) -> WebResponse:
-        return WebResponse(
+        return self._response(
             status,
             (json.dumps(payload, sort_keys=True) + "\n").encode(),
             {"Content-Type": "application/json; charset=utf-8"},
         )
+
+    def _response(
+        self,
+        status: HTTPStatus,
+        body: bytes,
+        headers: dict[str, str],
+    ) -> WebResponse:
+        return WebResponse(status, body, {**SECURITY_HEADERS, **headers})
 
 
 def serve(
