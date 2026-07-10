@@ -1,0 +1,4 @@
+target,port,state,latency_ms,banner,error
+127.0.0.1,22,open,1.84,OpenSSH,
+127.0.0.1,80,open,0.92,,
+127.0.0.1,443,closed,0.71,,connection refused
